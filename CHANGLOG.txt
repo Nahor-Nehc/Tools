@@ -1,0 +1,17 @@
+====[v2.1]====
+- FIXED scrollbar
+- added scroll.colour
+- added width and height to scroll.scrollbar
+- added drawing background colour
+- added drawing scroll bar
+- removed chackEvents
+- added checkMouseDown
+- added checkMouseUp
+- added checkMouseMotion
+
+====[v2]====
+- added Scroll
+
+====[v1]====
+- added Button
+- added: create, draw, check, toggleVis, changeAttr and remove for Button
