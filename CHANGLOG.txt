@@ -1,3 +1,8 @@
+====[v3.0]====
+- ADDED Menu.header
+- added Scroll.checkscroll
+- renamed s.py to test.py
+
 ====[v2.1]====
 - FIXED scrollbar
 - added scroll.colour
@@ -9,9 +14,9 @@
 - added checkMouseUp
 - added checkMouseMotion
 
-====[v2]====
+====[v2.0]====
 - added Scroll
 
-====[v1]====
+====[v1.0]====
 - added Button
 - added: create, draw, check, toggleVis, changeAttr and remove for Button

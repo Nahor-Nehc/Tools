@@ -177,5 +177,47 @@ class Scroll:
     self.scrollClickY = 0
     self.down = False
 
-  def scrollWithWheel(self, mouse, mouseState):
-    pass
+  def checkScroll(self, event, sensitivity=5):
+    self.currentY -= sensitivity*event.y
+    if self.currentY < self.buffer:
+      self.currentY = self.buffer
+
+    elif self.currentY > self.height - self.scrollBarRect.height - self.buffer:
+      self.currentY = self.height - self.scrollBarRect.height - self.buffer
+      
+    self.scrollBar[1] = self.currentY
+    self.scrollBarRect = pygame.Rect(*self.scrollBar)
+    
+class Menu:
+  class header:
+    def __init__(self, bgcolour, fgcolour, textcolour, x, y, width, height, headings, font, padding, outlinecolour=(0, 0, 0)):
+      self.bgcolour = bgcolour
+      self.fgcolour = fgcolour
+      self.textcolour = textcolour
+      self.outlinecolour = outlinecolour
+      self.font = font
+      self.padding = padding
+      self.x = x
+      self.y = y
+      self.width = width
+      self.height = height
+      self.headings = headings
+      self.current = 0
+      
+    def setCurrent(self, current):
+      self.current = current
+      
+    def draw(self, window):
+      pygame.draw.rect(window, self.bgcolour, pygame.Rect(self.x, self.y, self.width, self.height))
+      pygame.draw.line(window, self.outlinecolour, (0, self.y + self.height), (self.width, self.y + self.height))
+      totalLen = self.x + 5
+      for heading in self.headings:
+        text = self.font.render(heading.upper(), 1, self.textcolour)
+        if self.headings.index(heading) == self.current:
+          pygame.draw.rect(window, self.outlinecolour, pygame.Rect(totalLen, self.y, text.get_width()+self.padding, self.height-1), 1)
+          pygame.draw.rect(window, self.fgcolour, pygame.Rect(totalLen + 1, self.y + 1, text.get_width()+self.padding - 2, self.height-2))
+        else:
+          pygame.draw.rect(window, self.outlinecolour, pygame.Rect(totalLen, self.y + self.padding/5, text.get_width()+ self.padding, self.y + self.height+1-self.padding/5), 1)
+        window.blit(text, (totalLen + self.padding/2, (self.y*2 + self.height-text.get_height())/2))
+        totalLen += text.get_width()+self.padding-1
+
