@@ -191,6 +191,7 @@ class Scroll:
 class Menu:
   class header:
     def __init__(self, bgcolour, fgcolour, textcolour, x, y, width, height, headings, font, padding, outlinecolour=(0, 0, 0)):
+
       self.bgcolour = bgcolour
       self.fgcolour = fgcolour
       self.textcolour = textcolour
@@ -207,6 +208,16 @@ class Menu:
     def setCurrent(self, current):
       self.current = current
       
+    def incrementCurrent(self):
+      self.current += 1
+      if self.current >= len(self.headings):
+        self.current = 0
+        
+    def decrementCurrent(self):
+      self.current -= 1
+      if self.current < 0:
+        self.current = len(self.headings) - 1
+      
     def draw(self, window):
       pygame.draw.rect(window, self.bgcolour, pygame.Rect(self.x, self.y, self.width, self.height))
       pygame.draw.line(window, self.outlinecolour, (0, self.y + self.height), (self.width, self.y + self.height))
@@ -220,4 +231,3 @@ class Menu:
           pygame.draw.rect(window, self.outlinecolour, pygame.Rect(totalLen, self.y + self.padding/5, text.get_width()+ self.padding, self.y + self.height+1-self.padding/5), 1)
         window.blit(text, (totalLen + self.padding/2, (self.y*2 + self.height-text.get_height())/2))
         totalLen += text.get_width()+self.padding-1
-

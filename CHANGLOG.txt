@@ -1,3 +1,7 @@
+====[v3.1]====
+- added incrementCurrent
+- added decrementCurrent
+
 ====[v3.0]====
 - ADDED Menu.header
 - added Scroll.checkscroll

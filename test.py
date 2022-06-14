@@ -59,7 +59,7 @@ def main():
   
   scroll = tools.Scroll(100, 100, 500, 500, 2000, 20, WHITE)
   
-  headings = tools.Menu.header(LGREY, WHITE, BLACK, 100, 100, 400, 40, ["1", "2", "oiuytgfdcvbghj", "right"], FONT, 20)
+  headings = tools.Menu.header(LGREY, WHITE, BLACK, 0, 0, WIDTH, 40, ["1", "2", "oiuytgfdcvbghj", "right"], FONT, 20)
 
   #initiates game loop
   run = True
@@ -87,11 +87,11 @@ def main():
         sys.exit()
         
       if event.type == pygame.KEYDOWN:
-        scroll.draw_rect(RED, 100, 400, 200, 200, 3, BLACK)
-        scroll.draw_circle(GREEN, 100, 200, 50, 10, BLUE)
+        headings.incrementCurrent()
         
       if event.type == pygame.MOUSEBUTTONUP:
         scroll.checkMouseUp(mouse)
+        headings.decrementCurrent()
         
       if event.type == pygame.MOUSEBUTTONDOWN:
         scroll.checkMouseDown(mouse)
