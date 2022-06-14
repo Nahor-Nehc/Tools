@@ -1,3 +1,6 @@
+====[v3.2]====
+- added .gitignore
+
 ====[v3.1]====
 - added incrementCurrent
 - added decrementCurrent
