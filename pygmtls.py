@@ -1,6 +1,10 @@
+from enum import auto
 import pygame
 
 class Button:
+  """
+  This class holds every button instance created by the create function
+  """
   def __init__(self):
     self.buttons = []
     self.visible = []
@@ -18,6 +22,24 @@ class Button:
     }
     
   def create(self, rect, colour, event, outlineWidth = 0, outlineColour = (0, 0, 0), visible = True, text = "", font = None, textColour = (0, 0, 0)):
+    """
+    This function creates a button
+    
+    :param rect: the rectangle of the button
+    :type rect: pygame.Rect
+    
+    :param colour: the colour of the rectangle
+    :type colour: (R, G, B)
+    
+    :param event: event called by clicking on the button
+    :type event: pygame.USEREVENT
+    
+    :param outlineWidth: the width of the outline
+    :type int: integer
+    
+    :param outlineColour: the colour of the border
+    :type outlineColour: (R, G, B)
+    """
     temp = [rect, colour, event, outlineWidth, outlineColour, text, font, textColour]
     if visible == True:
       self.visible.append(temp)
@@ -231,3 +253,121 @@ class Menu:
           pygame.draw.rect(window, self.outlinecolour, pygame.Rect(totalLen, self.y + self.padding/5, text.get_width()+ self.padding, self.y + self.height+1-self.padding/5), 1)
         window.blit(text, (totalLen + self.padding/2, (self.y*2 + self.height-text.get_height())/2))
         totalLen += text.get_width()+self.padding-1
+
+class Animation_group:
+  def __init__(self):
+    self.animations = []
+    
+  def get_animations(self, display = True):
+    if display == True:
+      print(self.animations)
+    return self.animations
+    
+  def set_animations(self, animations):
+    self.animations = animations
+    
+  def add_animation(self, animation_object):
+    self.animations.append(animation_object)
+
+  def play_all(self, window, auto_increment_frame):
+    for animation in self.animations:
+      animation.play(window, auto_increment_frame)
+  
+  def play(self, animation_object, window,auto_increment_frame):
+    animation_object.play(window, auto_increment_frame)
+    
+  def create_animation(self, x, y, frame_type = "image"):
+    self.animations.append(Animation(x, y, frame_type))
+    
+  def remove_animation(self, animation_object_or_index):
+    if isinstance(int, animation_object_or_index):
+      self.animations.pop(animation_object_or_index)
+    else:
+      self.animations.remove(animation_object_or_index)
+  
+class Animation:
+  def __init__(self, x, y, frame_type = "image"):
+    self.initial_x = x
+    self.initial_y = y
+    self.current_x = x
+    self.current_y = y
+    self.frames = []
+    self.offsets = []
+    self.type = frame_type
+    self.current = 0
+    
+  def get_frames(self, display = True):
+    if display == True:
+      print(self.frames)
+    return self.frames
+  
+  def set_frames(self, frames = []):
+    self.frames = frames
+    
+  def get_offsets(self, display = True):
+    if display == True:
+      print(self.offsets)
+    return self.offsets
+  
+  def set_offsets(self, offsets = []):
+    self.offsets = offsets
+    
+  def duplicate_frame(self, frame_index, duplication_factor = 2):
+    frame = self.frames[frame_index]
+    offset = self.offsets[frame_index]
+    
+    frames = self.frames
+    offsets = self.offsets
+    
+    for _ in range(0, duplication_factor):
+      frames.insert(frame_index, frame)
+      offsets.insert(frame_index, offset)
+      
+    self.set_frames(frames)
+    self.set_offsets(offsets)
+    
+  def duplicate_all_frames(self, duplication_factor = 2):
+    frames = []
+    offsets = []
+    [frames.extend([frame for _ in range(duplication_factor)]) for frame in self.frames]
+    [offsets.extend([offset for _ in range(duplication_factor)]) for offset in self.offsets]
+    self.set_frames(frames)
+    self.set_offsets(offsets)
+
+  def get_current_frame(self, display = True):
+    if display == True:
+      print(self.current)
+    return self.current
+  
+  def set_current_frame(self, frame):
+    self.current = frame
+    
+  def increment_frame(self):
+    self.current += 1
+    if self.current >= len(self.frames):
+      self.current = 0
+  
+  def decrement_frame(self):
+    self.current -= 1
+    if self.current < 0:
+      self.current = len(self.frames) - 1
+    
+  def add_frame(self, image, offset = [0, 0]):
+    self.frames.append(image)
+    self.offsets.append(offset)
+    
+  def remove_frame(self, index):
+    self.frames.pop(index)
+    self.offsets.pop(index)
+    
+  def play_next_frame(self, window, auto_increment_frame = True):
+    if self.type == "image":
+      self.current_x += self.offsets[self.current][0]
+      self.current_y += self.offsets[self.current][1]
+      window.blit(self.frames[self.current], (self.current_x, self.current_y))
+      if auto_increment_frame == True:
+        self.increment_frame()
+    #if self.type == ""
+
+  def play(self, window, auto_increment_frame):
+    self.play_next_frame(window, auto_increment_frame)

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import pygmtls as tools
+import os
 
 pygame.init()
 
@@ -33,19 +34,15 @@ surface.fill(RED)
 
 TEST = pygame.USEREVENT + 1
 
-def drawWin(buttons, scroll, headings):
-  pygame.draw.rect(WIN, BLACK, pygame.Rect(0, 0, WIDTH, HEIGHT))
+def drawWin(buttons, scroll, headings, explosions):
+  pygame.draw.rect(WIN, WHITE, pygame.Rect(0, 0, WIDTH, HEIGHT))
   buttons.draw(WIN)
   
-  # surf = pygame.Surface((50,50))
-  # surf.fill(GREEN)
-  # surface.blit(surf, (50, 60))
+  explosions.play_all(WIN, True)
   
-  # WIN.blit(surface, (200, 200))
-  #scroll.draw(WIN)
-  headings.draw(WIN)
+  # scroll.draw(WIN)
+  # headings.draw(WIN)
   pygame.display.flip()
-  
 
 
 def main():
@@ -57,7 +54,38 @@ def main():
   
   rect = pygame.Rect(PADDING, PADDING, 200, 100)
   
-  scroll = tools.Scroll(100, 100, 500, 500, 2000, 20, WHITE)
+  scroll = tools.Scroll(0, 100, 500, 500, 2000, 20, WHITE)
+  
+  explosions = tools.Animation_group()
+
+
+  explosion1 = tools.Animation(10, 10, frame_type="image")
+  
+  explosion1.set_frames([pygame.transform.scale(pygame.image.load(os.path.join("Assets", "effects", "explosion", str(x) + ".png")), (50, 50)) for x in range(1, 13)])
+  
+  explosion1.set_offsets([[0, 0] for i in range(1, 13)])
+  
+  explosion1.duplicate_frame(3, 5)
+  
+  explosion2 = tools.Animation(10, 70, frame_type="image")
+  
+  explosion2.set_frames([pygame.transform.scale(pygame.image.load(os.path.join("Assets", "effects", "explosion", str(x) + ".png")), (50, 50)) for x in range(1, 13)])
+  
+  explosion2.set_offsets([[0, 0] for i in range(1, 13)])
+  
+  explosion2.duplicate_all_frames(2)
+  
+  explosion3 = tools.Animation(10, 130, frame_type="image")
+  
+  explosion3.set_frames([pygame.transform.scale(pygame.image.load(os.path.join("Assets", "effects", "explosion", str(x) + ".png")), (50, 50)) for x in range(1, 13)])
+  
+  explosion3.set_offsets([[0, 0] for i in range(1, 13)])
+  
+  explosion3.duplicate_all_frames(7)
+  
+  explosions.add_animation(explosion1)
+  explosions.add_animation(explosion2)
+  explosions.add_animation(explosion3)
   
   headings = tools.Menu.header(LGREY, WHITE, BLACK, 0, 0, WIDTH, 40, ["1", "2", "oiuytgfdcvbghj", "right"], FONT, 20)
 
@@ -70,6 +98,14 @@ def main():
 
     #gets mouse position
     mouse = pygame.mouse.get_pos()
+    
+    for i in range(0, scroll.total, 50):
+      col = i//7.5
+      if col > 255:
+        col = 20
+    
+      scroll.draw_rect((col, col, col), 200, i, 30, 30)
+
 
     #for everything that the user has inputted ...
     for event in pygame.event.get():
@@ -87,11 +123,13 @@ def main():
         sys.exit()
         
       if event.type == pygame.KEYDOWN:
-        headings.incrementCurrent()
-        
+        if event.key == pygame.K_RIGHT:
+          headings.incrementCurrent()
+        if event.key == pygame.K_LEFT:
+          headings.decrementCurrent()
+          
       if event.type == pygame.MOUSEBUTTONUP:
         scroll.checkMouseUp(mouse)
-        headings.decrementCurrent()
         
       if event.type == pygame.MOUSEBUTTONDOWN:
         scroll.checkMouseDown(mouse)
@@ -105,6 +143,6 @@ def main():
       if event.type == TEST:
         pass
         
-    drawWin(buttons, scroll, headings)
+    drawWin(buttons, scroll, headings, explosions)
 
 main()
