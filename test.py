@@ -34,11 +34,11 @@ surface.fill(RED)
 
 TEST = pygame.USEREVENT + 1
 
-def drawWin(buttons, scroll, headings, explosions):
+def drawWin(buttons, scroll, headings, explosions, explosion1):
   pygame.draw.rect(WIN, WHITE, pygame.Rect(0, 0, WIDTH, HEIGHT))
   buttons.draw(WIN)
   
-  explosions.play_all(WIN, True)
+  explosions.play_all(WIN, True, True)
   
   # scroll.draw(WIN)
   # headings.draw(WIN)
@@ -65,7 +65,7 @@ def main():
   
   explosion1.set_offsets([[0, 0] for i in range(1, 13)])
   
-  explosion1.duplicate_frame(3, 5)
+  # explosion1.duplicate_frame(3, 5)
   
   explosion2 = tools.Animation(10, 70, frame_type="image")
   
@@ -75,17 +75,21 @@ def main():
   
   explosion2.duplicate_all_frames(2)
   
+  explosion2.get_coords()
+  
   explosion3 = tools.Animation(10, 130, frame_type="image")
   
   explosion3.set_frames([pygame.transform.scale(pygame.image.load(os.path.join("Assets", "effects", "explosion", str(x) + ".png")), (50, 50)) for x in range(1, 13)])
   
   explosion3.set_offsets([[0, 0] for i in range(1, 13)])
   
-  explosion3.duplicate_all_frames(7)
+  explosion3.duplicate_all_frames(3)
   
   explosions.add_animation(explosion1)
   explosions.add_animation(explosion2)
   explosions.add_animation(explosion3)
+  
+  explosions.start_all()
   
   headings = tools.Menu.header(LGREY, WHITE, BLACK, 0, 0, WIDTH, 40, ["1", "2", "oiuytgfdcvbghj", "right"], FONT, 20)
 
@@ -104,7 +108,7 @@ def main():
       if col > 255:
         col = 20
     
-      scroll.draw_rect((col, col, col), 200, i, 30, 30)
+      scroll.draw_rect("box"+str(col), (col, col, col), 200, i, 30, 30)
 
 
     #for everything that the user has inputted ...
@@ -143,6 +147,6 @@ def main():
       if event.type == TEST:
         pass
         
-    drawWin(buttons, scroll, headings, explosions)
+    drawWin(buttons, scroll, headings, explosions, explosion1)
 
 main()

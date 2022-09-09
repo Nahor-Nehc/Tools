@@ -1,3 +1,13 @@
+====[v4.1]====
+- added name for each object in scroll class
+- added autostop for play_all() and play() in animation group class
+- added start_all() for animation group
+- added stop_all() for animation group
+- added start(), stop(), get_coords(), set_coords() and duplicate_range() to animation
+- fixed auto_stop to work properly in play()
+- added comments to code
+- changed duplicate_all_frames() to use duplicate_range(), which uses duplicate_frame()
+
 ====[v4]====
 - added Animation_group; __init__, gwT_animations, set_animations, add_animations, play_all, play, create_animation, remove_animation
 - added Animation; __init__, get_frames, set_frames, get_offsets, set_offsets, get_current_frame, set_current_frame, increment_frame, decrement_frame, add_frame, remove_frame, play, player_next_frame, duplicate_frame, duplicate_all_frames
