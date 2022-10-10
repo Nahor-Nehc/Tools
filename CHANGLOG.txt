@@ -1,3 +1,6 @@
+====[v4.2]====
+- added function annotations for each non-__init__ function(->)
+
 ====[v4.1]====
 - added name for each object in scroll class
 - added autostop for play_all() and play() in animation group class

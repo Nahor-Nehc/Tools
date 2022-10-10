@@ -1,4 +1,3 @@
-from enum import auto
 import pygame
 
 class Button:
@@ -21,7 +20,7 @@ class Button:
       "textColour" : 7,
     }
     
-  def create(self, rect, colour, event, outlineWidth = 0, outlineColour = (0, 0, 0), visible = True, text = "", font = None, textColour = (0, 0, 0)):
+  def create(self, rect, colour, event, outlineWidth = 0, outlineColour = (0, 0, 0), visible = True, text = "", font = None, textColour = (0, 0, 0)) -> None:
     """
     This function creates a button
     
@@ -47,7 +46,7 @@ class Button:
       self.hidden.append(temp)
     self.buttons.append(temp)
 
-  def draw(self, window):
+  def draw(self, window) -> None:
     for button in self.visible:
       pygame.draw.rect(window, button[self.attrs["colour"]], button[self.attrs["rect"]])
       if button[self.attrs["outlineWidth"]] != 0:
@@ -56,12 +55,12 @@ class Button:
         txt = button[self.attrs["font"]].render(button[self.attrs["text"]], 1, button[self.attrs["textColour"]])
         window.blit(txt, (button[self.attrs["rect"]].centerx - txt.get_width()/2, button[self.attrs["rect"]].centery - txt.get_height()/2))
       
-  def check(self, mouse):
+  def check(self, mouse) -> None:
     for button in self.visible:
       if button[self.attrs["rect"]].collidepoint(mouse):
         pygame.event.post(pygame.event.Event(button[self.attrs["event"]]))
         
-  def toggleVis(self, rect):
+  def toggleVis(self, rect) -> None:
     edited = False
     for button in self.visible:
       if button[self.attrs["rect"]] == rect:
@@ -75,7 +74,7 @@ class Button:
           self.hidden.remove(button)
           self.visible.append(button)
       
-  def changeAttr(self, rect, attr, newVal):
+  def changeAttr(self, rect, attr, newVal) -> None:
     if attr in self.attrs.keys():
       for button in self.buttons:
         if button[self.attrs["rect"]] == rect:
@@ -83,7 +82,7 @@ class Button:
     else:
       raise ValueError("Attribute does not exist: " + str(attr))
     
-  def remove(self, rect):
+  def remove(self, rect) -> None:
     for button in self.buttons:
       if button[self.attrs["rect"]] == rect:
         self.buttons.remove(button)
@@ -118,7 +117,7 @@ class Scroll:
     
     self.items = []
     
-  def draw(self, window):
+  def draw(self, window) -> None:
     window.blit(self.surface, (self.x, self.y))
     pygame.draw.rect(self.surface, self.colour, pygame.Rect(0, 0, self.width, self.height))
     for item in self.items:
@@ -142,7 +141,7 @@ class Scroll:
     
     self.items = []
 
-  def draw_rect(self, rect_name, colour, x, y, width, height, borderWidth=None, borderColour=None):
+  def draw_rect(self, rect_name, colour, x, y, width, height, borderWidth=None, borderColour=None) -> None:
     dictionary = {
       "shape" : "rect",
       "name" : rect_name,
@@ -156,7 +155,7 @@ class Scroll:
     }
     self.items.append(dictionary)
     
-  def draw_line(self, line_name, colour, start, end, width):
+  def draw_line(self, line_name, colour, start, end, width) -> None:
     dictionary = {
       "shape" : "line",
       "name" : line_name,
@@ -167,7 +166,7 @@ class Scroll:
     }
     self.items.append(dictionary)
     
-  def draw_circle(self, line_name, colour, centerx, centery, radius, borderWidth = None, borderColour = None):
+  def draw_circle(self, line_name, colour, centerx, centery, radius, borderWidth = None, borderColour = None) -> None:
     dictionary = {
       "shape" : "circle",
       "name" : line_name,
@@ -190,14 +189,14 @@ class Scroll:
     
   
   
-  def checkMouseDown(self, mouse):
+  def checkMouseDown(self, mouse) -> None:
     rect = pygame.Rect(self.scrollBarRect.left + self.x, self.scrollBarRect.top + self.y, self.scrollBarRect.width, self.scrollBarRect.height)
     if rect.collidepoint(mouse):
       self.scrollClickY = mouse[1]
       self.down = True
       self.origin = self.scrollBarRect[1]
       
-  def checkMouseMotion(self, mouse):
+  def checkMouseMotion(self, mouse) -> None:
     if pygame.mouse.get_pressed()[0] and self.down == True:
       self.currentY = self.origin + mouse[1] - self.scrollClickY
       
@@ -209,11 +208,11 @@ class Scroll:
       self.scrollBar[1] = self.currentY
       self.scrollBarRect = pygame.Rect(*self.scrollBar)
         
-  def checkMouseUp(self, mouse):
+  def checkMouseUp(self, mouse) -> None:
     self.scrollClickY = 0
     self.down = False
 
-  def checkScroll(self, event, sensitivity=5):
+  def checkScroll(self, event, sensitivity=5) -> None:
     self.currentY -= sensitivity*event.y
     if self.currentY < self.buffer:
       self.currentY = self.buffer
@@ -241,20 +240,20 @@ class Menu:
       self.headings = headings
       self.current = 0
       
-    def setCurrent(self, current):
+    def setCurrent(self, current) -> None:
       self.current = current
       
-    def incrementCurrent(self):
+    def incrementCurrent(self) -> None:
       self.current += 1
       if self.current >= len(self.headings):
         self.current = 0
         
-    def decrementCurrent(self):
+    def decrementCurrent(self) -> None:
       self.current -= 1
       if self.current < 0:
         self.current = len(self.headings) - 1
       
-    def draw(self, window):
+    def draw(self, window) -> None:
       pygame.draw.rect(window, self.bgcolour, pygame.Rect(self.x, self.y, self.width, self.height))
       pygame.draw.line(window, self.outlinecolour, (0, self.y + self.height), (self.width, self.y + self.height))
       totalLen = self.x + 5
@@ -272,38 +271,38 @@ class Animation_group:
   def __init__(self):
     self.animations = []
     
-  def get_animations(self, display = True):
+  def get_animations(self, display = True) -> list:
     if display == True:
       print(self.animations)
     return self.animations
     
-  def set_animations(self, animations):
+  def set_animations(self, animations) -> None:
     self.animations = animations
     
-  def add_animation(self, animation_object):
+  def add_animation(self, animation_object) -> None:
     self.animations.append(animation_object)
 
-  def play_all(self, window, auto_increment_frame, auto_stop = False):
+  def play_all(self, window, auto_increment_frame, auto_stop = False) -> None:
     for animation in self.animations:
       animation.play(window, auto_increment_frame, auto_stop)
   
-  def play(self, animation_object, window,auto_increment_frame, auto_stop = False):
+  def play(self, animation_object, window,auto_increment_frame, auto_stop = False) -> None:
     animation_object.play(window, auto_increment_frame, auto_stop)
     
-  def create_animation(self, x, y, frame_type = "image"):
+  def create_animation(self, x, y, frame_type = "image") -> None:
     self.animations.append(Animation(x, y, frame_type))
     
-  def remove_animation(self, animation_object_or_index):
+  def remove_animation(self, animation_object_or_index) -> None:
     if isinstance(int, animation_object_or_index):
       self.animations.pop(animation_object_or_index)
     else:
       self.animations.remove(animation_object_or_index)
       
-  def start_all(self):
+  def start_all(self) -> None:
     for anims in self.animations:
       anims.start()
       
-  def stop_all(self):
+  def stop_all(self) -> None:
     for anims in self.animations:
       anims.stop()
 
@@ -319,44 +318,44 @@ class Animation:
     self.current = 0
     self.state = "stop"
     
-  def start(self):
+  def start(self) -> None:
     
     # allows the play function to run
     self.state = "playing"
     
-  def stop(self):
+  def stop(self) -> None:
     # prevents the play function from running
     self.state = "stop"
     
-  def set_coords(self, initial_x, initial_y, current_x, current_y):
+  def set_coords(self, initial_x, initial_y, current_x, current_y) -> None:
     # allows the user to change the coords
     self.initial_x = initial_x
     self.initial_y = initial_y
     self.current_x = current_x
     self.current_y = current_y
     
-  def get_coords(self, display = True):
+  def get_coords(self, display = True) -> tuple[int, int]:
     if display == True:
       print("%s, %s" %(self.initial_x, self.initial_y))
     return self.initial_x, self.initial_y
     
-  def get_frames(self, display = True):
+  def get_frames(self, display = True) -> list:
     if display == True:
       print(self.frames)
     return self.frames
   
-  def set_frames(self, frames = []):
+  def set_frames(self, frames = []) -> None:
     self.frames = frames
     
-  def get_offsets(self, display = True):
+  def get_offsets(self, display = True) -> list:
     if display == True:
       print(self.offsets)
     return self.offsets
   
-  def set_offsets(self, offsets = []):
+  def set_offsets(self, offsets = []) -> None:
     self.offsets = offsets
     
-  def duplicate_frame(self, frame_index, duplication_factor = 2):
+  def duplicate_frame(self, frame_index, duplication_factor = 2) -> None:
     
     # gets the frame and offset
     frame = self.frames[frame_index]
@@ -375,14 +374,14 @@ class Animation:
     self.set_frames(frames)
     self.set_offsets(offsets)
     
-  def duplicate_range(self, index_list, duplication_factor = 2):
+  def duplicate_range(self, index_list, duplication_factor = 2) -> None:
     
     # reverses the index list to prevent duplicating the incorrect 
     index_list.sort(reverse = True)
     for index in index_list:
       self.duplicate_frame(index, duplication_factor)
     
-  def duplicate_all_frames(self, duplication_factor = 2):
+  def duplicate_all_frames(self, duplication_factor = 2) -> None:
     
     self.duplicate_range([x for x in range(0, len(self.frames))], duplication_factor)
     
@@ -393,33 +392,33 @@ class Animation:
     # self.set_frames(frames)
     # self.set_offsets(offsets)
 
-  def get_current_frame(self, display = True):
+  def get_current_frame(self, display = True) -> int:
     if display == True:
       print(self.current)
     return self.current
   
-  def set_current_frame(self, frame):
+  def set_current_frame(self, frame) -> None:
     self.current = frame
     
-  def increment_frame(self):
+  def increment_frame(self) -> None:
     self.current += 1
     if self.current >= len(self.frames):
       self.current = 0
   
-  def decrement_frame(self):
+  def decrement_frame(self) -> None:
     self.current -= 1
     if self.current < 0:
       self.current = len(self.frames) - 1
     
-  def add_frame(self, image, offset = [0, 0]):
+  def add_frame(self, image, offset = [0, 0]) -> None:
     self.frames.append(image)
     self.offsets.append(offset)
     
-  def remove_frame(self, index):
+  def remove_frame(self, index) -> None:
     self.frames.pop(index)
     self.offsets.pop(index)
     
-  def play_next_frame(self, window, auto_increment_frame = True, auto_stop = False):
+  def play_next_frame(self, window, auto_increment_frame = True, auto_stop = False) -> None:
     if self.state == "playing":
       if self.type == "image":
         
@@ -439,5 +438,5 @@ class Animation:
           self.increment_frame()
       #if self.type == ""
 
-  def play(self, window, auto_increment_frame, auto_stop = False):
+  def play(self, window, auto_increment_frame, auto_stop = False) -> None:
     self.play_next_frame(window, auto_increment_frame, auto_stop)
